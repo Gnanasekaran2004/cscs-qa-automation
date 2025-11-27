@@ -1,0 +1,26 @@
+name: Automation Pipeline
+
+# Trigger: Run this every time we push code
+on: [push]
+
+jobs:
+  test-e2e:
+    runs-on: ubuntu-latest  # Use a Linux machine in the cloud
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install Dependencies
+      run: |
+        pip install -r requirements.txt
+        playwright install chromium
+        playwright install-deps
+
+    - name: Run Tests
+      # We use 'headless' mode because cloud servers don't have screens!
+      run: pytest test_wait.py
